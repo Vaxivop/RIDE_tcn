@@ -1,0 +1,14 @@
+executable = sql.sh
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+output = sql.out
+error = sql.err
+log = sql.log
+request_cpus = 1
+request_memory = 10GB
+request_disk = 10GB
++SingularityImage = "/data/user/sstray/icetray-notebook.sif"
+SINGULARITY_BIND_EXPR = "/data/user/sstray"
+queue
+
+
