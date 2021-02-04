@@ -4,7 +4,8 @@ actualfiles = glob.glob('/data/sim/IceCube/2012/filtered/level2/CORSIKA-in-ice/1
 #actualfiles = glob.glob('/data/sim/IceCube/2016/generated/CORSIKA-in-ice/21269/IC86_2016_spe_templates_DOM_oversize1/level2/redo/eff100/**/*.i3.zst')
 shuffle(actualfiles)
 print('Total  number of files:',len(actualfiles))
-actualfiles = actualfiles[:10000]
+files_processed = 10000
+actualfiles = actualfiles[:files_processed]
 print('Number of files being processed:',len(actualfiles))
 filenum = 100
 print('Files processed per script:',filenum)

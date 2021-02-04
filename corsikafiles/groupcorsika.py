@@ -97,8 +97,6 @@ def get_groups(features_in,truth_in,event_in):
 	if isinstance(truth_in,int) == False:
 		truth = truth_in[np.isin(truth_in[:,-1],unev)]
 		truth = np.array(truth)[truth[:,-1].argsort(),:]
-#		truth = np.array(truth[np.array([(len(i)<maxsize and len(i)>10) for i in grouped_features])])
-#	grouped_features = [np.vstack((np.array(i),np.zeros((maxsize,features.shape[1]))))[:maxsize] for i in grouped_features if len(i)<maxsize if len(i)>10]
 	grouped_features = np.dstack(grouped_features)
 	grouped_features = np.rollaxis(grouped_features,2,0)
 	if isinstance(truth_in,int) == False:

@@ -7,7 +7,7 @@ error = job.err
 request_cpus = 1
 request_memory = 10GB
 request_disk = 10GB
-Requirements = $(requirements:True) && (OpSysMajorVer == 7) && (TARGET.has_avx)
-+SingularityImage = "/data/user/sstray/icetray-notebook.sif"
-SINGULARITY_BIND_EXPR = "/data/sim/IceCube/2012/filtered/level2"
+#Requirements = $(requirements:True) && (OpSysMajorVer == 7) && (TARGET.has_avx)
+#+SingularityImage = "/data/user/sstray/icetray-notebook.sif"
+#SINGULARITY_BIND_EXPR = "/data/sim/IceCube/2012/filtered/level2"
 queue file from files_corsika.txt

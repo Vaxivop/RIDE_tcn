@@ -49,9 +49,9 @@ for i, unds in enumerate(np.unique(domstr)):
 	totalcharge_dom[i] = np.sum(charge[temp])
 	exphits_dom[i] = len(charge[temp])
 	totalhits_dom[i] = np.sum(charge[temp]>0)
-d40b = group_dom == 40
-dom40 = np.column_stack((RIDE[d40b],charge_dom[d40b],totalcharge_dom[d40b],exphits_dom[d40b],totalhits_dom[d40b],x_dom[d40b],y_dom[d40b],z_dom[d40b],domstr_dom[d40b],group_dom[d40b],status_dom[d40b]))
-np.savetxt('dom40.txt',dom40)
+#d40b = group_dom == 40
+#dom40 = np.column_stack((RIDE[d40b],charge_dom[d40b],totalcharge_dom[d40b],exphits_dom[d40b],totalhits_dom[d40b],x_dom[d40b],y_dom[d40b],z_dom[d40b],domstr_dom[d40b],group_dom[d40b],status_dom[d40b]))
+#np.savetxt('dom40.txt',dom40)
 print('Calculating RIDE...')
 for ung in np.unique(group_dom):
 	temp = np.isin(group_dom,ung)

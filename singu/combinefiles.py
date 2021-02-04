@@ -20,7 +20,6 @@ for i,name in enumerate(files):
 		tbig.resize((int(tsize+len(truth)),truth.shape[1]))
 		tbig[tsize:] = np.array(truth,dtype=np.float32)
 	temp.close()
-print('aaa')
 print(tbig)
 print(fbig)
 out.close()
