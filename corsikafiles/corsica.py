@@ -1,4 +1,5 @@
 def test(frame):
+
 	if frame['I3EventHeader'].sub_event_stream != 'InIceSplit':
 		return False
 	T = frame['I3MCTree'].get_daughters(frame['I3MCTree'].get_primaries()[0])
@@ -8,15 +9,11 @@ def test(frame):
 	if not (str(T[0].type)=='MuPlus' or str(T[0].type)=='MuMinus'):
 		print('Not a muon')
 		return False
-#	print(T)
-#	print(dir(frame['MMCTrackList'][0]))
-#	a=b
 
 	mu = T[0]
 	if use_truth == 1:
 		endp = np.array(mu.pos+mu.dir*mu.length)
 		stopped_xy = border.contains_point((endp[0],endp[1]),radius=-trackradius)
-#		stopped_z = (endp[2] > (border_zminmax[0]+height)) * (endp[2] < (border_zminmax[1]-height))
 		stopped_z = endp[2] > -400
 		stopped_theta = (mu.dir.zenith >= 40*np.pi/180) * (mu.dir.zenith<=70*np.pi/180)
 		stoppedmuon = int(stopped_xy*stopped_z*stopped_theta)
@@ -28,7 +25,6 @@ def test(frame):
 	charge = []
 	time = []
 	series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
-#	series = frame['SplitInIcePulses'].apply(frame)
 
 	for i,pulse in enumerate(series):
 		for hit in pulse[1]:
@@ -36,7 +32,6 @@ def test(frame):
 			dom.append(pulse[0].om)
 			charge.append(hit.charge)
 			time.append(hit.time)
-#			pulse_width.append(hit.width)
 	if len(charge) < 8:# or len(charge) > 100:
 		print('Not enough or too many DOM hits')
 		return False
@@ -67,7 +62,6 @@ def test(frame):
 
 	coords = np.array([x,y,z]).T.astype(float)
 	mu = T[0]
-#	startp = np.array(mu.pos+mu.dir*(mu.length-200))
 	startp = np.array(mu.pos)
 	endp = np.array(mu.pos+mu.dir*mu.length)
 	point_vector = coords-startp
@@ -79,9 +73,6 @@ def test(frame):
 
 	domrad = np.linalg.norm(coords-close,axis=1)
 	domrad = (domrad < domradius) * (domrad > 20)
-
-#	singlegroup = np.array(domfile[:,4]).astype(int)
-#	domrad = domrad*(singlegroup == 40)
 
 	if np.sum(domrad) == 0:
 		print('Zero DOMs within track radius')
@@ -100,24 +91,13 @@ def test(frame):
 	HQE[HQE=='BAD'] = 2
 	HQE=np.array(HQE).astype(float)
 
-#	tempid = event_run+str(frame['I3EventHeader'].event_id+frame['I3EventHeader'].sub_event_id)
-#	eventid = np.ones(len(group)).astype(int)*int(tempid)
-#	prediction_vector = np.ones(len(group))*prediction
-#	truth_vector = np.ones(len(group))*stoppedmuon	
-
 	frame['x'] = dataclasses.I3VectorDouble(x)
 	frame['y'] = dataclasses.I3VectorDouble(y)
 	frame['z'] = dataclasses.I3VectorDouble(z)
 	frame['charge'] = dataclasses.I3VectorDouble(charge)
-#	frame['time'] = dataclasses.I3VectorDouble(time)
-#	frame['pulse_width'] = dataclasses.I3VectorDouble(pulse_width)
 	frame['domstr'] = dataclasses.I3VectorDouble(domstr)
 	frame['group'] = dataclasses.I3VectorDouble(group)
 	frame['HQE'] = dataclasses.I3VectorDouble(HQE)
-#	frame['domrad'] = dataclasses.I3VectorDouble(domrad)
-#	frame['eventid'] = dataclasses.I3VectorDouble(eventid)
-#	frame['TCN'] = dataclasses.I3VectorDouble(prediction_vector)
-#	frame['truth'] = dataclasses.I3VectorDouble(truth_vector)
 
 
 def savefeatures(frame,fin=None,names=None):
@@ -129,7 +109,8 @@ use_truth = 1
 if use_truth == 0:
 	from tensorflow.keras.models import load_model as lm
 	model = lm('/home/sstray/test/condor/corsikafiles/corsika_model_test/classification_model')
-#
+
+
 import os
 from I3Tray import *
 from icecube import dataio
@@ -153,7 +134,8 @@ meanstd = np.loadtxt('/home/sstray/test/condor/corsikafiles/meanstd.txt')
 domradius = 100
 th1 = 0.9
 th2 = 0.99
-#from icecube.sim_services import propagation
+
+from icecube.sim_services import propagation
 def test_my_little_function():
 	my_features = ['x','y','z','charge','domstr','group','HQE']
 	
@@ -162,18 +144,27 @@ def test_my_little_function():
 	args = parser.parse_args()
 	filelist = args.infiles.split(',')
 	for nums in range(len(filelist)):
-#		if nums == (len(filelist)-1):
-#			filelist[nums] = filelist[nums][:-1]
 		featurestemp = [[] for i in range(len(my_features))]
 		global event_run
 		event_run = filelist[nums].split('/')[-1].split('.')[-3]
 
-		tray = I3Tray()
+                tray = I3Tray()
 		tray.AddModule('I3Reader','read_stuff',Filename=filelist[nums])
-#		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
-		tray.AddModule(test,'test')
-		tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
-		tray.Execute()
+		tray.AddModule('Delete',keys=["MMCTrackList"]) # <-- Add this
+		tray.AddSegment(propagation.RecreateMCTree,"recreate",
+                                RawMCTree="I3MCTree_preMuonProp",
+				RNGState="I3MCTree_preMuonProp_RNGState",  # <-- Change this
+				Paranoia=False)
+                tray.AddModule(test,'test')
+                tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
+
+                print("try: Excecute")
+                try:
+                        tray.Execute()
+                except:
+                        print("bad file: skipping...")
+                        continue
+
 		for i in range(len(featurestemp)):
 			 featurestemp[i] = [item for sublist in featurestemp[i] for item in sublist]
 		if nums == 0:

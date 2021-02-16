@@ -1,7 +1,14 @@
 import glob
+#print(glob.__version__)
+
 import h5py
+print(h5py.__version__)
+
 import numpy as np
-actualfiles = glob.glob('/data/user/sstray/etienne/*.hdf5')
+print(np.__version__)
+
+actualfiles = glob.glob('/home/jvmead/dom_eff/RIDE_tcn/test/*.hdf5')
+print(actualfiles)
 biglist = []
 for i in actualfiles:
 	print(i)
@@ -62,4 +69,4 @@ for ung in np.unique(group_dom):
 	else:
 		RIDE[temp] = 0
 RIDE = np.column_stack((RIDE,charge_dom,totalcharge_dom,exphits_dom,totalhits_dom,x_dom,y_dom,z_dom,domstr_dom,group_dom,status_dom))
-np.savetxt('RIDE_etienne.txt',RIDE)
+np.savetxt('RIDE_jvmead.txt',RIDE)
