@@ -8,6 +8,21 @@ def test(frame):
 	if not (str(T[0].type)=='MuPlus' or str(T[0].type)=='MuMinus'):
 #		print('Not a muon')
 		return False
+
+	mu = T[0]	
+	endp = np.array(mu.pos+mu.dir*mu.length)
+	startp = np.array(mu.pos)
+	end_x,end_y,end_z = endp[0],endp[1],endp[2]
+	start_x,start_y,start_z = startp[0],startp[1],startp[2]
+	theta = mu.dir.zenith*180/np.pi
+	
+	stopped_xy = border.contains_point((endp[0],endp[1]),radius=-100)
+	stopped_z = endp[2] > -400
+	stopped_theta = (theta >= 40) * (theta <= 70)
+	stoppedmuon = int(stopped_xy*stopped_z)
+	if stoppedmuon == 0:
+		return False
+
 	dom = []
 	string = []
 	charge = []
@@ -18,7 +33,8 @@ def test(frame):
 			string.append(pulse[0].string)
 			dom.append(pulse[0].om)
 			charge.append(hit.charge)
-
+	if len(charge) < 8:
+		return False
 	domstr = np.column_stack([string,dom]).astype(str)
 	domstr = np.char.zfill(domstr,2).astype(object)
 	domstr = np.sum(domstr,axis=1).astype(str)
@@ -27,20 +43,11 @@ def test(frame):
 	x,y,z = domfile[:,5],domfile[:,6],domfile[:,7]
 	chargep = np.array(charge).astype(float)
 	charge = np.zeros(len(x))
-	charge[domindex] = chargep	
-
+	charge[domindex] = chargep
 	charge = charge[grp].astype(float)
-	if sum(charge) == 0:
-#		print('No charge in group')
-		return False
-#	print('Accepted')
-	mu = T[0]	
-	endp = np.array(mu.pos+mu.dir*mu.length)
-	startp = np.array(mu.pos)
-	end_x,end_y,end_z = endp[0],endp[1],endp[2]
-	start_x,start_y,start_z = startp[0],startp[1],startp[2]
-	theta = mu.dir.zenith*180/np.pi
 
+#	print('Accepted')
+	
 	coords = np.array([x,y,z]).T.astype(float)
 	point_vector = coords-startp
 	seg_vector = endp-startp
@@ -116,13 +123,17 @@ border_zminmax = [-512.82,524.56]
 
 
 domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_coords_spacing_HQE.txt',dtype='str')
-outputname = 'group83_data.hdf5'
+outputname = 'group_data.hdf5'
 
-singlegroup = np.array(domfile[:,4]).astype(int)
-grp = singlegroup == 83
+strings_to_cut = [1,2,3,4,5,6,13,21,30,40,50,59,67,74,73,72,78,77,76,75,68,60,51,41,31,22,14,7]
+dom_strings = np.array([i[:2] for i in domfile[:,3]]).astype(int)
+good_doms = np.array(domfile[:,2]!='BAD')
+not_outer = ~np.isin(dom_strings,strings_to_cut)
+single_group = np.array(domfile[:,4]).astype(int) == 83
+grp = single_group * not_outer * good_doms
 maxsize = sum(grp)
 print(maxsize)
-	
+
 def test_my_little_function():
 	my_features = ['x','y','z','charge','domrad','domstr','status','eventid']
 	my_truth = ['start_x','start_y','start_z','end_x','end_y','end_z','theta','eventid']
@@ -161,7 +172,7 @@ def test_my_little_function():
 				group = np.concatenate((group,np.copy(tmp[0])),axis=0)
 				truth = np.concatenate((truth,np.copy(tmp[1])),axis=0)
 		else:
-			print(str(filelist[nums])+' is a bad file')
+			print('BAD FILE: '+str(filelist[nums]))
 	return group, truth
 
 #pr = cProfile.Profile()

@@ -1,7 +1,8 @@
 import glob
 import h5py
 import numpy as np
-actualfiles = glob.glob('/data/user/sstray/etienne/*.hdf5')
+actualfiles = glob.glob('/data/user/sstray/no_theta/*.hdf5')
+outputname = 'RIDE_no_theta.txt'
 biglist = []
 for i in actualfiles:
 	print(i)
@@ -62,4 +63,4 @@ for ung in np.unique(group_dom):
 	else:
 		RIDE[temp] = 0
 RIDE = np.column_stack((RIDE,charge_dom,totalcharge_dom,exphits_dom,totalhits_dom,x_dom,y_dom,z_dom,domstr_dom,group_dom,status_dom))
-np.savetxt('RIDE_etienne.txt',RIDE)
+np.savetxt(outputname,RIDE)

@@ -19,7 +19,7 @@ def test(frame):
 #		stopped_z = (endp[2] > (border_zminmax[0]+height)) * (endp[2] < (border_zminmax[1]-height))
 		stopped_z = endp[2] > -400
 		stopped_theta = (mu.dir.zenith >= 40*np.pi/180) * (mu.dir.zenith<=70*np.pi/180)
-		stoppedmuon = int(stopped_xy*stopped_z*stopped_theta)
+		stoppedmuon = int(stopped_xy*stopped_z)
 		if stoppedmuon == 0:
 			print('Not stopped')
 			return False
@@ -79,9 +79,6 @@ def test(frame):
 
 	domrad = np.linalg.norm(coords-close,axis=1)
 	domrad = (domrad < domradius) * (domrad > 20)
-
-#	singlegroup = np.array(domfile[:,4]).astype(int)
-#	domrad = domrad*(singlegroup == 40)
 
 	if np.sum(domrad) == 0:
 		print('Zero DOMs within track radius')
@@ -161,6 +158,7 @@ def test_my_little_function():
 	parser.add_argument('-i','--infiles',required=True)
 	args = parser.parse_args()
 	filelist = args.infiles.split(',')
+	first_file_bad = 1
 	for nums in range(len(filelist)):
 #		if nums == (len(filelist)-1):
 #			filelist[nums] = filelist[nums][:-1]
@@ -176,8 +174,9 @@ def test_my_little_function():
 		tray.Execute()
 		for i in range(len(featurestemp)):
 			 featurestemp[i] = [item for sublist in featurestemp[i] for item in sublist]
-		if nums == 0:
+		if (nums == 0) or (first_file_bad == 1):
 			featuresarray = np.column_stack(featurestemp)
+			first_file_bad = 0
 		else:
 			featuresarray = np.concatenate((featuresarray,np.column_stack(featurestemp)),axis=0)
 		print(featuresarray.shape)
