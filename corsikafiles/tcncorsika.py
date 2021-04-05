@@ -1,4 +1,8 @@
 def test(frame):
+	if frame['I3EventHeader'].sub_event_stream != 'InIceSplit':
+		return False
+	if frame['I3EventHeader'].sub_event_id != 0:
+		return False
 	T = frame['I3MCTree'].get_daughters(frame['I3MCTree'].get_primaries()[0])
 	if len(T) > 1:
 		return False
@@ -8,17 +12,21 @@ def test(frame):
 	string = []
 	charge = []
 	time = []
-	pulse_width = []
 	
-	series = frame['SplitInIcePulses'].apply(frame)
+#	series = frame['SplitInIcePulses'].apply(frame)
+#	try:	
+#	series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
+	series = frame['SplitInIcePulses'].apply(frame)	
+#	except:
+#		return False
 	for i,pulse in enumerate(series):
 		for hit in pulse[1]:
 			string.append(pulse[0].string)
 			dom.append(pulse[0].om)
 			charge.append(hit.charge)
 			time.append(hit.time)
-			pulse_width.append(hit.width)
-
+	if len(charge) < 8:
+		return False
 	domstr = np.column_stack([string,dom]).astype(str)
 	domstr = np.char.zfill(domstr,2).astype(object)
 	domstr = np.sum(domstr,axis=1).astype(str)
@@ -32,17 +40,13 @@ def test(frame):
 	endp = np.array(mu.pos+mu.dir*mu.length)
 	startp = np.array(mu.pos)
 	stopped_xy = border.contains_point((endp[0],endp[1]),radius=-rad)
-	stopped_z = (endp[2] > (border_zminmax[0]+height)) * (endp[2] < (border_zminmax[1]-height))
+#	stopped_z = (endp[2] > (border_zminmax[0]+height)) * (endp[2] < (border_zminmax[1]-height))
 	stopped_z = endp[2] > -400
 	stoppedmuon = int(stopped_xy*stopped_z)
 	end_x,end_y,end_z = endp[0],endp[1],endp[2]
 	start_x,start_y,start_z = startp[0],startp[1],startp[2]
-
-	if len(x) == 0:
-		print('No length')
-		return False
-	if frame['I3EventHeader'].sub_event_id != 0:
-		return False
+	
+	
 	tempid = event_run+str(frame['I3EventHeader'].event_id)
 	eventid = np.ones(len(x)).astype(int)*int(tempid)
 
@@ -98,30 +102,34 @@ from scipy.interpolate import interp1d
 border_zminmax = [-512.82,524.56]
 rad = 100
 height = 100
-maxsize = 100
+maxsize = 150
 
-domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_coords_spacing_HQE.txt',dtype='str')
-testfilename = '/data/sim/IceCube/2012/filtered/level2/CORSIKA-in-ice/11499/77000-77999/Level2_IC86.2012_corsika.011499.077910.i3.bz2'
+#domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_coords_spacing_HQE.txt',dtype='str')
+domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_spacing_2.txt',dtype='str')
 outputname = 'tcn_corsika_data.hdf5'
-meanstd = np.loadtxt('/home/sstray/test/condor/singu/meanstd.txt')
-	
+
+from icecube.sim_services import propagation
 def test_my_little_function():
 	my_features = ['x','y','z','charge','time','eventid']
-	my_truth = ['stopped_muon','start_x','start_y','start_z','end_x','end_y','end_z','eventid']
+	my_truth = ['stopped_muon','end_x','end_y','end_z','eventid']
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-i','--infiles',required=True)
 	args = parser.parse_args()
 	filelist = args.infiles.split(',')
+	first_file_bad = 1
 	for nums in range(len(filelist)):
 #		if nums == (len(filelist)-1):
 #			filelist[nums] = filelist[nums][:-1]
 		featurestemp = [[] for i in range(len(my_features))]
 		truthtemp = [[] for i in range(len(my_truth))]
 		global event_run
+#		event_run = filelist[nums].split('/')[-1].split('.')[-3].split('_')[-1]
 		event_run = filelist[nums].split('/')[-1].split('.')[-3]
-		
+
 		tray = I3Tray()
 		tray.AddModule('I3Reader','read_stuff',Filename=filelist[nums])
+#		tray.AddModule('Delete',keys=["MMCTrackList"])
+#		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
 		tray.AddModule(test,'test')
 		tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
 		tray.AddModule(savetruth,'asd2',fin=truthtemp, names=my_truth)
@@ -132,16 +140,17 @@ def test_my_little_function():
 		trutharray = np.column_stack(truthtemp)
 		trutharray = trutharray[np.unique(trutharray[:,-1],return_index=True)[1]]
 		if len(trutharray) > 10:
-			if nums == 0:
+			if (nums == 0) or (first_file_bad == 1):
 				print('Grouping')
 				group,truth = get_groups(featuresarray[:,:-1],trutharray,featuresarray[:,-1])
-			if nums != 0:
+				first_file_bad = 0
+			else:
 				print('Grouping and concatenating')
 				tmp = get_groups(featuresarray[:,:-1],trutharray,featuresarray[:,-1])
 				group = np.concatenate((group,np.copy(tmp[0])),axis=0)
 				truth = np.concatenate((truth,np.copy(tmp[1])),axis=0)
 		else:
-			print(str(filelist[nums])+' is a bad file')
+			print('bad file: '+str(filelist[nums]))
 	return group, truth
 
 #pr = cProfile.Profile()

@@ -1,8 +1,8 @@
 import glob
 import h5py
 import numpy as np
-files = glob.glob('/data/user/sstray/group83/*.hdf5')
-out = h5py.File('output_83_theta_rad.hdf5','a')
+files = glob.glob('/data/user/sstray/TCN2012/*.hdf5')
+out = h5py.File('TCN_2012_data_new.hdf5','a')
 for i,name in enumerate(files):
 	temp = h5py.File(name,'r')
 	features = temp['features']

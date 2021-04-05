@@ -5,11 +5,11 @@ when_to_transfer_output = ON_EXIT
 log = new.log
 output = new.out
 error = new.err
-request_cpus = 3
-request_memory = 20GB
+request_cpus = 1
+request_memory = 15GB
 request_disk = 5GB
 Requirements = $(requirements:True) && (OpSysMajorVer == 7) && (TARGET.has_avx)
-+SingularityImage = "/home/sstray/test/condor/singu/machine.sif"
++SingularityImage = "/home/sstray/test/machine.sif"
 SINGULARITY_BIND_EXPR = "/data/user/sstray"
 queue
 #queue file from files_hdf5.txt
