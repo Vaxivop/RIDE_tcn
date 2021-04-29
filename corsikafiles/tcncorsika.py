@@ -3,6 +3,9 @@ def test(frame):
 		return False
 	if frame['I3EventHeader'].sub_event_id != 0:
 		return False
+	A = frame['I3MCTree'].get_primaries()
+	if len(A) > 1:
+		return False
 	T = frame['I3MCTree'].get_daughters(frame['I3MCTree'].get_primaries()[0])
 	if len(T) > 1:
 		return False
@@ -13,12 +16,10 @@ def test(frame):
 	charge = []
 	time = []
 	
-#	series = frame['SplitInIcePulses'].apply(frame)
-#	try:	
-#	series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
-	series = frame['SplitInIcePulses'].apply(frame)	
-#	except:
-#		return False
+	try:	
+		series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
+	except:
+		return False
 	for i,pulse in enumerate(series):
 		for hit in pulse[1]:
 			string.append(pulse[0].string)
@@ -31,8 +32,13 @@ def test(frame):
 	domstr = np.char.zfill(domstr,2).astype(object)
 	domstr = np.sum(domstr,axis=1).astype(str)
 	domindex = np.array([np.where(domfile[:,3]==i)[0] for i in domstr])[:,0]
-	
 	x,y,z = domfile[domindex,5].astype(float),domfile[domindex,6].astype(float),domfile[domindex,7].astype(float)
+	icelayer = domfile[domindex,8].astype(float)
+	HQE = domfile[domindex,2].astype(str)
+	HQE[HQE=='NQE'] = 0
+	HQE[HQE=='HQE'] = 1
+	HQE[HQE=='BAD'] = 2
+	HQE=np.array(HQE).astype(float)
 	charge = np.array(charge).astype(float)
 	time = np.array(time).astype(float)
 
@@ -41,11 +47,12 @@ def test(frame):
 	startp = np.array(mu.pos)
 	stopped_xy = border.contains_point((endp[0],endp[1]),radius=-rad)
 #	stopped_z = (endp[2] > (border_zminmax[0]+height)) * (endp[2] < (border_zminmax[1]-height))
-	stopped_z = endp[2] > -400
+	stopped_z = (endp[2] > -400) * (endp[2] < 500)
 	stoppedmuon = int(stopped_xy*stopped_z)
 	end_x,end_y,end_z = endp[0],endp[1],endp[2]
 	start_x,start_y,start_z = startp[0],startp[1],startp[2]
-	
+	theta = mu.dir.zenith*180/np.pi
+	energy = mu.energy
 	
 	tempid = event_run+str(frame['I3EventHeader'].event_id)
 	eventid = np.ones(len(x)).astype(int)*int(tempid)
@@ -55,6 +62,8 @@ def test(frame):
 	frame['z'] = dataclasses.I3VectorDouble(z)
 	frame['charge'] = dataclasses.I3VectorDouble(charge)
 	frame['time'] = dataclasses.I3VectorDouble(time)
+	frame['HQE'] = dataclasses.I3VectorDouble(HQE)
+	frame['icelayer'] = dataclasses.I3VectorDouble(icelayer)
 	frame['eventid'] = dataclasses.I3VectorDouble(eventid)
 
 	frame['stopped_muon'] = dataclasses.I3Double(stoppedmuon)
@@ -64,6 +73,8 @@ def test(frame):
 	frame['start_x'] = dataclasses.I3Double(start_x)
 	frame['start_y'] = dataclasses.I3Double(start_y)
 	frame['start_z'] = dataclasses.I3Double(start_z)
+	frame['zenith'] = dataclasses.I3Double(theta)
+	frame['energy'] = dataclasses.I3Double(energy)
 def savefeatures(frame,fin=None,names=None):
 	for i,name in enumerate(names):
 		fin[i].append(frame[name])
@@ -110,8 +121,8 @@ outputname = 'tcn_corsika_data.hdf5'
 
 from icecube.sim_services import propagation
 def test_my_little_function():
-	my_features = ['x','y','z','charge','time','eventid']
-	my_truth = ['stopped_muon','end_x','end_y','end_z','eventid']
+	my_features = ['x','y','z','charge','time','HQE','icelayer','eventid']
+	my_truth = ['stopped_muon','end_x','end_y','end_z','zenith','energy','eventid']
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-i','--infiles',required=True)
 	args = parser.parse_args()
@@ -123,13 +134,13 @@ def test_my_little_function():
 		featurestemp = [[] for i in range(len(my_features))]
 		truthtemp = [[] for i in range(len(my_truth))]
 		global event_run
-#		event_run = filelist[nums].split('/')[-1].split('.')[-3].split('_')[-1]
-		event_run = filelist[nums].split('/')[-1].split('.')[-3]
+		event_run = filelist[nums].split('/')[-1].split('.')[-3].split('_')[-1]
+#		event_run = filelist[nums].split('/')[-1].split('.')[-3]
 
 		tray = I3Tray()
 		tray.AddModule('I3Reader','read_stuff',Filename=filelist[nums])
-#		tray.AddModule('Delete',keys=["MMCTrackList"])
-#		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
+		tray.AddModule('Delete',keys=["MMCTrackList"])
+		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
 		tray.AddModule(test,'test')
 		tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
 		tray.AddModule(savetruth,'asd2',fin=truthtemp, names=my_truth)

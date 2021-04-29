@@ -1,8 +1,8 @@
 import glob
 import h5py
 import numpy as np
-files = glob.glob('/data/user/sstray/TCN2012/*.hdf5')
-out = h5py.File('TCN_2012_data_new.hdf5','a')
+files = glob.glob('/data/user/sstray/g74_zbin_2016_new/*.hdf5')
+out = h5py.File('group74_zbin_new.hdf5','a')
 for i,name in enumerate(files):
 	temp = h5py.File(name,'r')
 	features = temp['features']
@@ -13,6 +13,7 @@ for i,name in enumerate(files):
 		print(fbig)
 	else:
 		fsize,tsize = len(fbig),len(tbig)
+		tsize = len(tbig)
 		print(fsize)
 		fbig.resize((int(fsize+len(features)),features.shape[1],features.shape[2]))
 		fbig[fsize:,:] = np.array(features,dtype=np.float32)
@@ -21,5 +22,5 @@ for i,name in enumerate(files):
 		tbig[tsize:] = np.array(truth,dtype=np.float32)
 	temp.close()
 print(tbig)
-print(fbig)
+#print(fbig)
 out.close()

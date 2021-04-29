@@ -3,6 +3,9 @@ def test(frame):
 		return False
 	if frame['I3EventHeader'].sub_event_id != 0:
 		return False
+	A = frame['I3MCTree'].get_primaries()
+	if len(A) > 1:
+		return False
 	T = frame['I3MCTree'].get_daughters(frame['I3MCTree'].get_primaries()[0])
 	if len(T) > 1:
 #		print('Cluster')
@@ -65,6 +68,7 @@ def test(frame):
 	grp2 = grp*domrad_bool	
 	if np.sum(grp2) == 0:
 		return False
+
 	charge = charge[grp2].astype(float)
 	x = x[grp2].astype(float)
 	y = y[grp2].astype(float)
@@ -161,12 +165,12 @@ def test_my_little_function():
 		featurestemp = [[] for i in range(len(my_features))]
 		truthtemp = [[] for i in range(len(my_truth))]
 		global event_run
-#		event_run = filelist[nums].split('/')[-1].split('.')[-3].split('_')[-1]
-		event_run = filelist[nums].split('/')[-1].split('.')[-3]
+		event_run = filelist[nums].split('/')[-1].split('.')[-3].split('_')[-1]
+#		event_run = filelist[nums].split('/')[-1].split('.')[-3]
 		tray = I3Tray()
 		tray.AddModule('I3Reader','read_stuff',Filename=filelist[nums])
-#		tray.AddModule('Delete',keys=["MMCTrackList"])
-#		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
+		tray.AddModule('Delete',keys=["MMCTrackList"])
+		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
 		tray.AddModule(test,'test')
 		tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
 		tray.AddModule(savetruth,'asd2',fin=truthtemp, names=my_truth)

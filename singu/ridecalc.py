@@ -1,17 +1,17 @@
 import glob
 import h5py
 import numpy as np
-actualfiles = glob.glob('/data/user/sstray/2016_full_10125/*.hdf5')
-group_div = [(np.arange(32,140)[27*bog:27*(bog+1)+(bog==3)]) for bog in range(4)]
+actualfiles = glob.glob('/data/user/sstray/2012_final_0130/*.hdf5')[:20]
+#group_div = [(np.arange(32,140)[27*bog:27*(bog+1)+(bog==3)]) for bog in range(4)]
 #group_div = [(np.arange(2,107)[26*bog:26*(bog+1)+(bog==3)]) for bog in range(4)]
-grp_pick = 3
-outputname = 'RIDE_2016_075_full_icelayer_grp'+str(grp_pick)+'.txt'
+#grp_pick = 3
+outputname = 'RIDE_2012_0130_final.txt'
 biglist = []
-print(group_div[grp_pick])
+#print(group_div[grp_pick])
 for i in actualfiles:
 	print(i)
 	gtemp = np.array(h5py.File(i,'r')['array'])
-	biglist.append(gtemp[np.isin(gtemp[:,7],group_div[grp_pick])])
+	biglist.append(gtemp)	
 print('Appended...')
 bigarray = np.vstack(biglist)
 #out = h5py.File('output_single_group2.hdf5','w')
@@ -23,7 +23,7 @@ y = bigarray[:,1]
 z = bigarray[:,2]
 charge = bigarray[:,3]
 domstr = bigarray[:,4]
-group = bigarray[:,7]
+group = bigarray[:,5]
 print(np.min(group))
 print(np.max(group))
 HQE = bigarray[:,6]

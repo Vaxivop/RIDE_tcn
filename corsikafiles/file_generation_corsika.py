@@ -1,10 +1,10 @@
 import glob
 from random import shuffle
-actualfiles = glob.glob('/data/sim/IceCube/2012/filtered/level2/CORSIKA-in-ice/11499/**/*.i3.bz2')
-#actualfiles = glob.glob('/data/sim/IceCube/2016/generated/CORSIKA-in-ice/21269/IC86_2016_spe_templates_DOM_oversize1/level2/redo/eff100/**/*.i3.zst')
+#actualfiles = glob.glob('/data/sim/IceCube/2012/filtered/level2/CORSIKA-in-ice/11499/**/*.i3.bz2')
+actualfiles = glob.glob('/data/sim/IceCube/2016/generated/CORSIKA-in-ice/21269/IC86_2016_spe_templates_DOM_oversize1/level2/redo/eff100/**/*.i3.zst')
 shuffle(actualfiles)
 print('Total  number of files:',len(actualfiles))
-files_processed = 1000
+files_processed = 100000
 actualfiles = actualfiles[:files_processed]
 print('Number of files being processed:',len(actualfiles))
 filenum = 100

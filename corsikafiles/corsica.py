@@ -27,11 +27,11 @@ def test(frame):
 	string = []
 	charge = []
 	time = []
-	try:
-		series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
-	except:
-		return False
-#	series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
+#	try:
+#		series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
+#	except:
+#		return False
+	series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
 	for i,pulse in enumerate(series):
 		for hit in pulse[1]:
 			string.append(pulse[0].string)
@@ -150,7 +150,7 @@ border_zminmax = [-512.82,524.56]
 trackradius = 100
 height = 100
 domrad_min = 0
-domrad_max = 75
+domrad_max = 130
 theta_min = 0
 theta_max = 180
 
@@ -184,16 +184,11 @@ def test_my_little_function():
 
 		tray = I3Tray()
 		tray.AddModule('I3Reader','read_stuff',Filename=filelist[nums])
-		tray.AddModule('Delete',keys=["MMCTrackList"])
-		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
+#		tray.AddModule('Delete',keys=["MMCTrackList"])
+#		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
 		tray.AddModule(test,'test')
 		tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
 		tray.Execute()
-#		try:
-#			tray.Execute()
-#		except:
-#			print("bad file: skipping...")
-#			continue
 		for i in range(len(featurestemp)):
 			 featurestemp[i] = [item for sublist in featurestemp[i] for item in sublist]
 		if (nums == 0) or (first_file_bad == 1):

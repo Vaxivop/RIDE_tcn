@@ -1,0 +1,6 @@
+*.hdf5
+*.bz2
+*.pyc
+*.err
+*.log
+*.out
