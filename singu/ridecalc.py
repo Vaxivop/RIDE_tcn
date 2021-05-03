@@ -1,13 +1,21 @@
 import glob
 #print(glob.__version__)
 
+import sys
+print("Python version: ")
+print(sys.version)
+
 import h5py
+print("h5py version: ")
 print(h5py.__version__)
 
 import numpy as np
+print("numpy version: ")
 print(np.__version__)
 
 actualfiles = glob.glob('/home/jvmead/dom_eff/RIDE_tcn/test/*.hdf5')
+#actualfiles = glob.glob('/home/jvmead/dom_eff/RIDE_tcn/corsikafiles/featurelist.hdf5')
+
 print(actualfiles)
 biglist = []
 for i in actualfiles:

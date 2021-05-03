@@ -17,10 +17,10 @@ print(doms.head(5))
 
 f = plt.figure()
 
-plt.plot(nqe["z"],nqe["RIDE"],"o")
-plt.plot(hqe["z"],hqe["RIDE"],"o")
+plt.plot(nqe["z"],nqe["RIDE"],"o",markersize=1)
+plt.plot(hqe["z"],hqe["RIDE"],"o",markersize=1)
 
-plt.ylim((0,2))
+plt.ylim((0,2.7))
 plt.ylabel('RIDE')
 plt.xlabel('z (m)')
 

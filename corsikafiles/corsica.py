@@ -14,8 +14,8 @@ def test(frame):
 	if use_truth == 1:
 		endp = np.array(mu.pos+mu.dir*mu.length)
 		stopped_xy = border.contains_point((endp[0],endp[1]),radius=-trackradius)
-		stopped_z = endp[2] > -400
-		stopped_theta = (mu.dir.zenith >= 40*np.pi/180) * (mu.dir.zenith<=70*np.pi/180)
+		stopped_z = (endp[2] > border_zminmax[0]+height) * (endp[2] < border_zminmax[1]-height) 
+		stopped_theta = (mu.dir.zenith >= zenith_min*np.pi/180) * (mu.dir.zenith<=zenith_max*np.pi/180)
 		stoppedmuon = int(stopped_xy*stopped_z*stopped_theta)
 		if stoppedmuon == 0:
 			print('Not stopped')
@@ -72,7 +72,7 @@ def test(frame):
 	close[t>1] = endp
 
 	domrad = np.linalg.norm(coords-close,axis=1)
-	domrad = (domrad < domradius) * (domrad > 20)
+	domrad = (domrad < domradius_max) * (domrad > dom_radius_min)
 
 	if np.sum(domrad) == 0:
 		print('Zero DOMs within track radius')
@@ -123,6 +123,7 @@ import argparse
 import matplotlib.path as mpath
 bordercoords = np.array([(-256.1400146484375, -521.0800170898438), (-132.8000030517578, -501.45001220703125), (-9.13000011444092, -481.739990234375), (114.38999938964844, -461.989990234375), (237.77999877929688, -442.4200134277344), (361.0, -422.8299865722656), (405.8299865722656, -306.3800048828125), (443.6000061035156, -194.16000366210938), (500.42999267578125, -58.45000076293945), (544.0700073242188, 55.88999938964844), (576.3699951171875, 170.9199981689453), (505.2699890136719, 257.8800048828125), (429.760009765625, 351.0199890136719), (338.44000244140625, 463.7200012207031), (224.5800018310547, 432.3500061035156), (101.04000091552734, 412.7900085449219), (22.11000061035156, 509.5), (-101.05999755859375, 490.2200012207031), (-224.08999633789062, 470.8599853515625), (-347.8800048828125, 451.5199890136719), (-392.3800048828125, 334.239990234375), (-437.0400085449219, 217.8000030517578), (-481.6000061035156, 101.38999938964844), (-526.6300048828125, -15.60000038146973), (-570.9000244140625, -125.13999938964844), (-492.42999267578125, -230.16000366210938), (-413.4599914550781, -327.2699890136719), (-334.79998779296875, -424.5)])
 border = mpath.Path(bordercoords)
+
 border_zminmax = [-512.82,524.56]
 trackradius = 100
 height = 100
@@ -131,7 +132,13 @@ domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_coords_spacing_H
 testfilename = '/data/sim/IceCube/2012/filtered/level2/CORSIKA-in-ice/11499/77000-77999/Level2_IC86.2012_corsika.011499.077910.i3.bz2'
 outputname = 'featurelist.hdf5'
 meanstd = np.loadtxt('/home/sstray/test/condor/corsikafiles/meanstd.txt')
-domradius = 100
+
+zenith_min = 0
+zenith_max = 90
+
+domradius_min = 0
+domradius_max = 130
+
 th1 = 0.9
 th2 = 0.99
 
@@ -143,6 +150,7 @@ def test_my_little_function():
 	parser.add_argument('-i','--infiles',required=True)
 	args = parser.parse_args()
 	filelist = args.infiles.split(',')
+        first_file_bad = 1
 	for nums in range(len(filelist)):
 		featurestemp = [[] for i in range(len(my_features))]
 		global event_run
@@ -165,13 +173,15 @@ def test_my_little_function():
                         print("bad file: skipping...")
                         continue
 
-		for i in range(len(featurestemp)):
-			 featurestemp[i] = [item for sublist in featurestemp[i] for item in sublist]
-		if nums == 0:
-			featuresarray = np.column_stack(featurestemp)
-		else:
-			featuresarray = np.concatenate((featuresarray,np.column_stack(featurestemp)),axis=0)
-		print(featuresarray.shape)
+                for i in range(len(featurestemp)):
+                        featurestemp[i] = [item for sublist in featurestemp[i] for item in sublist]
+                if (nums == 0) or (first_file_bad == 1): #<---- THIS
+                        featuresarray = np.column_stack(featurestemp)
+                        first_file_bad = 0 #<---- AND THIS
+                else:
+                        featuresarray = np.concatenate((featuresarray,np.column_stack(featurestemp)),axis=0)
+                print(featuresarray.shape)
+
 	return featuresarray
 
 #pr = cProfile.Profile()
