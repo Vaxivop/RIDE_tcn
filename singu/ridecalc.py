@@ -1,11 +1,17 @@
 import glob
 import h5py
 import numpy as np
-actualfiles = glob.glob('/data/user/sstray/etienne/*.hdf5')
+actualfiles = glob.glob('/data/user/sstray/2012_final_0130/*.hdf5')[:20]
+#group_div = [(np.arange(32,140)[27*bog:27*(bog+1)+(bog==3)]) for bog in range(4)]
+#group_div = [(np.arange(2,107)[26*bog:26*(bog+1)+(bog==3)]) for bog in range(4)]
+#grp_pick = 3
+outputname = 'RIDE_2012_0130_final.txt'
 biglist = []
+#print(group_div[grp_pick])
 for i in actualfiles:
 	print(i)
-	biglist.append(np.array(h5py.File(i,'r')['array']))
+	gtemp = np.array(h5py.File(i,'r')['array'])
+	biglist.append(gtemp)	
 print('Appended...')
 bigarray = np.vstack(biglist)
 #out = h5py.File('output_single_group2.hdf5','w')
@@ -18,6 +24,8 @@ z = bigarray[:,2]
 charge = bigarray[:,3]
 domstr = bigarray[:,4]
 group = bigarray[:,5]
+print(np.min(group))
+print(np.max(group))
 HQE = bigarray[:,6]
 
 charge_dom = np.zeros(len(np.unique(domstr)))
@@ -62,4 +70,4 @@ for ung in np.unique(group_dom):
 	else:
 		RIDE[temp] = 0
 RIDE = np.column_stack((RIDE,charge_dom,totalcharge_dom,exphits_dom,totalhits_dom,x_dom,y_dom,z_dom,domstr_dom,group_dom,status_dom))
-np.savetxt('RIDE_etienne.txt',RIDE)
+np.savetxt(outputname,RIDE)

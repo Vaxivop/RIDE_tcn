@@ -6,5 +6,5 @@ output = job.out
 error = job.err
 request_cpus = 1
 request_memory = 10GB
-request_disk = 10GB
+request_disk = 2GB
 queue file from files_corsika.txt

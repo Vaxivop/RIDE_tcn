@@ -1,0 +1,10 @@
+executable = g79.sh
+arguments = $(file) $(ItemIndex)
+should_transfer_files = YES
+log = job.log
+output = job.out
+error = job.err
+request_cpus = 1
+request_memory = 10GB
+request_disk = 1GB
+queue file from files_corsika.txt

@@ -509,3 +509,284 @@
 
 	Job terminated of its own accord at 2020-12-14T18:19:44Z.
 ...
+000 (92054373.000.000) 2021-02-16 13:02:22 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+000 (92055831.000.000) 2021-02-16 13:59:00 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+040 (92055831.000.000) 2021-02-16 14:07:49 Started transferring input files
+	Transferring to host: <10.128.10.51:57257?addrs=10.128.10.51-57257&alias=node122.icecube.wisc.edu>
+...
+040 (92055831.000.000) 2021-02-16 14:07:49 Finished transferring input files
+...
+040 (92054373.000.000) 2021-02-16 14:07:49 Started transferring input files
+	Transferring to host: <10.128.11.55:45757?addrs=10.128.11.55-45757&alias=c9-16.icecube.wisc.edu>
+...
+040 (92054373.000.000) 2021-02-16 14:07:49 Finished transferring input files
+...
+001 (92055831.000.000) 2021-02-16 14:07:50 Job executing on host: <10.128.10.51:52071?addrs=10.128.10.51-52071&alias=node122.icecube.wisc.edu>
+...
+001 (92054373.000.000) 2021-02-16 14:07:50 Job executing on host: <10.128.11.55:41603?addrs=10.128.11.55-41603&alias=c9-16.icecube.wisc.edu>
+...
+006 (92054373.000.000) 2021-02-16 14:07:59 Image size of job updated: 1414088
+	1370  -  MemoryUsage of job (MB)
+	1401860  -  ResidentSetSize of job (KB)
+...
+006 (92055831.000.000) 2021-02-16 14:07:59 Image size of job updated: 955808
+	636  -  MemoryUsage of job (MB)
+	650540  -  ResidentSetSize of job (KB)
+...
+007 (92054373.000.000) 2021-02-16 14:09:41 Shadow exception!
+	Error from slot1_29@c9-16.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 20480MB, used 27646MB.
+	0  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+...
+012 (92054373.000.000) 2021-02-16 14:09:41 Job was held.
+	Error from slot1_29@c9-16.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 20480MB, used 27646MB.
+	Code 21 Subcode 1001
+...
+007 (92055831.000.000) 2021-02-16 14:10:18 Shadow exception!
+	Error from slot1_2@node122.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 15360MB, used 24076MB.
+	0  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+...
+012 (92055831.000.000) 2021-02-16 14:10:18 Job was held.
+	Error from slot1_2@node122.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 15360MB, used 24076MB.
+	Code 21 Subcode 1001
+...
+009 (92054373.000.000) 2021-02-16 14:29:44 Job was aborted.
+	via condor_rm (by user sstray)
+...
+009 (92055831.000.000) 2021-02-16 14:29:44 Job was aborted.
+	via condor_rm (by user sstray)
+...
+000 (92058712.000.000) 2021-02-16 14:30:39 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+040 (92058712.000.000) 2021-02-16 14:34:49 Started transferring input files
+	Transferring to host: <10.128.10.56:40706?addrs=10.128.10.56-40706&alias=node127.icecube.wisc.edu>
+...
+040 (92058712.000.000) 2021-02-16 14:34:49 Finished transferring input files
+...
+001 (92058712.000.000) 2021-02-16 14:34:50 Job executing on host: <10.128.10.56:39701?addrs=10.128.10.56-39701&alias=node127.icecube.wisc.edu>
+...
+006 (92058712.000.000) 2021-02-16 14:35:00 Image size of job updated: 651848
+	24  -  MemoryUsage of job (MB)
+	23824  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 14:40:00 Image size of job updated: 12277424
+	10900  -  MemoryUsage of job (MB)
+	11161404  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 14:45:00 Image size of job updated: 12371156
+	10902  -  MemoryUsage of job (MB)
+	11163088  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 14:50:00 Image size of job updated: 12371156
+	11097  -  MemoryUsage of job (MB)
+	11362896  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 14:55:01 Image size of job updated: 12371156
+	11097  -  MemoryUsage of job (MB)
+	11363212  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 15:10:02 Image size of job updated: 12371660
+	11097  -  MemoryUsage of job (MB)
+	11363212  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 15:15:03 Image size of job updated: 12371660
+	11149  -  MemoryUsage of job (MB)
+	11415956  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 15:20:04 Image size of job updated: 12371660
+	11152  -  MemoryUsage of job (MB)
+	11419640  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 15:30:04 Image size of job updated: 12371800
+	11152  -  MemoryUsage of job (MB)
+	11419640  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 15:35:05 Image size of job updated: 12371800
+	11167  -  MemoryUsage of job (MB)
+	11434840  -  ResidentSetSize of job (KB)
+...
+006 (92058712.000.000) 2021-02-16 15:40:06 Image size of job updated: 12371800
+	11169  -  MemoryUsage of job (MB)
+	11436352  -  ResidentSetSize of job (KB)
+...
+040 (92058712.000.000) 2021-02-16 16:36:04 Started transferring output files
+...
+040 (92058712.000.000) 2021-02-16 16:36:04 Finished transferring output files
+...
+005 (92058712.000.000) 2021-02-16 16:36:04 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 01:04:44, Sys 0 00:54:42  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 01:04:44, Sys 0 00:54:42  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	942184  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+	942184  -  Total Bytes Sent By Job
+	154  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   admin_mutex_1         :                           0 
+	   admin_mutex_2         :                           0 
+	   admin_mutex_3         :                           0 
+	   Cpus                  :     1.00        1         1 
+	   Disk (KB)             :   942     5242880   6647246 
+	   GPUs                  :                           0 
+	   machine_token         :                           0 
+	   Memory (MB)           : 11169       15360     15360 
+
+	Job terminated of its own accord at 2021-02-16T22:36:04Z.
+...
+000 (92350137.000.000) 2021-02-18 09:52:38 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+040 (92350137.000.000) 2021-02-18 09:58:11 Started transferring input files
+	Transferring to host: <10.128.11.37:36854?addrs=10.128.11.37-36854&alias=c8-18.icecube.wisc.edu>
+...
+040 (92350137.000.000) 2021-02-18 09:58:11 Finished transferring input files
+...
+001 (92350137.000.000) 2021-02-18 09:58:12 Job executing on host: <10.128.11.37:49794?addrs=10.128.11.37-49794&alias=c8-18.icecube.wisc.edu>
+...
+006 (92350137.000.000) 2021-02-18 09:58:22 Image size of job updated: 1142924
+	1104  -  MemoryUsage of job (MB)
+	1129632  -  ResidentSetSize of job (KB)
+...
+007 (92350137.000.000) 2021-02-18 10:00:08 Shadow exception!
+	Error from slot1_6@c8-18.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 15360MB, used 23619MB.
+	0  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+...
+012 (92350137.000.000) 2021-02-18 10:00:08 Job was held.
+	Error from slot1_6@c8-18.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 15360MB, used 23619MB.
+	Code 21 Subcode 1001
+...
+009 (92350137.000.000) 2021-02-18 10:05:48 Job was aborted.
+	via condor_rm (by user sstray)
+...
+000 (92351117.000.000) 2021-02-18 10:05:50 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+040 (92351117.000.000) 2021-02-18 10:07:13 Started transferring input files
+	Transferring to host: <10.128.11.39:35423?addrs=10.128.11.39-35423&alias=c8-20.icecube.wisc.edu>
+...
+040 (92351117.000.000) 2021-02-18 10:07:13 Finished transferring input files
+...
+001 (92351117.000.000) 2021-02-18 10:07:14 Job executing on host: <10.128.11.39:46079?addrs=10.128.11.39-46079&alias=c8-20.icecube.wisc.edu>
+...
+006 (92351117.000.000) 2021-02-18 10:07:23 Image size of job updated: 907360
+	874  -  MemoryUsage of job (MB)
+	894448  -  ResidentSetSize of job (KB)
+...
+006 (92351117.000.000) 2021-02-18 10:12:23 Image size of job updated: 16632792
+	15269  -  MemoryUsage of job (MB)
+	15634480  -  ResidentSetSize of job (KB)
+...
+006 (92351117.000.000) 2021-02-18 10:17:24 Image size of job updated: 16632792
+	15272  -  MemoryUsage of job (MB)
+	15638036  -  ResidentSetSize of job (KB)
+...
+006 (92351117.000.000) 2021-02-18 10:42:26 Image size of job updated: 16632792
+	15326  -  MemoryUsage of job (MB)
+	15693564  -  ResidentSetSize of job (KB)
+...
+006 (92351117.000.000) 2021-02-18 10:47:27 Image size of job updated: 16632792
+	15330  -  MemoryUsage of job (MB)
+	15697804  -  ResidentSetSize of job (KB)
+...
+006 (92351117.000.000) 2021-02-18 10:57:28 Image size of job updated: 16633076
+	15330  -  MemoryUsage of job (MB)
+	15697804  -  ResidentSetSize of job (KB)
+...
+040 (92351117.000.000) 2021-02-18 12:08:38 Started transferring output files
+...
+040 (92351117.000.000) 2021-02-18 12:08:38 Finished transferring output files
+...
+005 (92351117.000.000) 2021-02-18 12:08:38 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 01:17:53, Sys 0 00:43:27  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 01:17:53, Sys 0 00:43:27  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	929809  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+	929809  -  Total Bytes Sent By Job
+	154  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   admin_mutex_1         :                           0 
+	   admin_mutex_2         :                           0 
+	   admin_mutex_3         :                           0 
+	   Cpus                  :     1.00        1         1 
+	   Disk (KB)             :   929     5242880   6645309 
+	   GPUs                  :                           0 
+	   machine_token         :                           0 
+	   Memory (MB)           : 15330       15360     15360 
+
+	Job terminated of its own accord at 2021-02-18T18:08:37Z.
+...
+000 (92506310.000.000) 2021-02-19 12:01:07 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+040 (92506310.000.000) 2021-02-19 12:10:06 Started transferring input files
+	Transferring to host: <10.128.11.23:47591?addrs=10.128.11.23-47591&alias=c8-4.icecube.wisc.edu>
+...
+040 (92506310.000.000) 2021-02-19 12:10:06 Finished transferring input files
+...
+001 (92506310.000.000) 2021-02-19 12:10:07 Job executing on host: <10.128.11.23:37044?addrs=10.128.11.23-37044&alias=c8-4.icecube.wisc.edu>
+...
+006 (92506310.000.000) 2021-02-19 12:10:16 Image size of job updated: 624072
+	598  -  MemoryUsage of job (MB)
+	611792  -  ResidentSetSize of job (KB)
+...
+007 (92506310.000.000) 2021-02-19 12:12:29 Shadow exception!
+	Error from slot1_1@c8-4.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 15360MB, used 22797MB.
+	0  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+...
+012 (92506310.000.000) 2021-02-19 12:12:29 Job was held.
+	Error from slot1_1@c8-4.icecube.wisc.edu: Policy violation. Memory limit exceeded: requested 15360MB, used 22797MB.
+	Code 21 Subcode 1001
+...
+009 (92506310.000.000) 2021-02-19 12:20:03 Job was aborted.
+	via condor_rm (by user sstray)
+...
+000 (92507006.000.000) 2021-02-19 12:20:15 Job submitted from host: <10.128.11.86:30832?addrs=10.128.11.86-30832&alias=submit-1.icecube.wisc.edu>
+...
+040 (92507006.000.000) 2021-02-19 12:28:05 Started transferring input files
+	Transferring to host: <10.128.11.25:37929?addrs=10.128.11.25-37929&alias=c8-6.icecube.wisc.edu>
+...
+040 (92507006.000.000) 2021-02-19 12:28:05 Finished transferring input files
+...
+001 (92507006.000.000) 2021-02-19 12:28:06 Job executing on host: <10.128.11.25:49940?addrs=10.128.11.25-49940&alias=c8-6.icecube.wisc.edu>
+...
+006 (92507006.000.000) 2021-02-19 12:28:16 Image size of job updated: 1169612
+	1131  -  MemoryUsage of job (MB)
+	1157340  -  ResidentSetSize of job (KB)
+...
+006 (92507006.000.000) 2021-02-19 12:33:17 Image size of job updated: 2098556
+	1132  -  MemoryUsage of job (MB)
+	1158960  -  ResidentSetSize of job (KB)
+...
+040 (92507006.000.000) 2021-02-19 12:35:15 Started transferring output files
+...
+040 (92507006.000.000) 2021-02-19 12:35:15 Finished transferring output files
+...
+005 (92507006.000.000) 2021-02-19 12:35:15 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:04:52, Sys 0 00:02:12  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:04:52, Sys 0 00:02:12  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	943985  -  Run Bytes Sent By Job
+	154  -  Run Bytes Received By Job
+	943985  -  Total Bytes Sent By Job
+	154  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated 
+	   admin_mutex_1         :                           0 
+	   admin_mutex_2         :                           0 
+	   admin_mutex_3         :                           0 
+	   Cpus                  :     1.00        1         1 
+	   Disk (KB)             :   943     5242880   6647246 
+	   GPUs                  :                           0 
+	   machine_token         :                           0 
+	   Memory (MB)           :  1132       15360     15360 
+
+	Job terminated of its own accord at 2021-02-19T18:35:14Z.
+...

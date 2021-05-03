@@ -3,10 +3,10 @@ def test(frame):
 		return False
 	T = frame['I3MCTree'].get_daughters(frame['I3MCTree'].get_primaries()[0])
 	if len(T) > 1:
-		print('Cluster')
+#		print('Cluster')
 		return False
 	if not (str(T[0].type)=='MuPlus' or str(T[0].type)=='MuMinus'):
-		print('Not a muon')
+#		print('Not a muon')
 		return False
 #	print(T)
 #	print(dir(frame['MMCTrackList'][0]))
@@ -18,18 +18,20 @@ def test(frame):
 		stopped_xy = border.contains_point((endp[0],endp[1]),radius=-trackradius)
 #		stopped_z = (endp[2] > (border_zminmax[0]+height)) * (endp[2] < (border_zminmax[1]-height))
 		stopped_z = endp[2] > -400
-		stopped_theta = (mu.dir.zenith >= 40*np.pi/180) * (mu.dir.zenith<=70*np.pi/180)
+		stopped_theta = (mu.dir.zenith >= theta_min*np.pi/180) * (mu.dir.zenith <= theta_max*np.pi/180)
 		stoppedmuon = int(stopped_xy*stopped_z*stopped_theta)
 		if stoppedmuon == 0:
-			print('Not stopped')
+#			print('Not stopped')
 			return False
 	dom = []
 	string = []
 	charge = []
 	time = []
+#	try:
+#		series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
+#	except:
+#		return False
 	series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
-#	series = frame['SplitInIcePulses'].apply(frame)
-
 	for i,pulse in enumerate(series):
 		for hit in pulse[1]:
 			string.append(pulse[0].string)
@@ -78,19 +80,20 @@ def test(frame):
 	close[t>1] = endp
 
 	domrad = np.linalg.norm(coords-close,axis=1)
-	domrad = (domrad < domradius) * (domrad > 20)
-
-#	singlegroup = np.array(domfile[:,4]).astype(int)
-#	domrad = domrad*(singlegroup == 40)
+	domrad = (domrad < domrad_max) * (domrad > domrad_min)
+	domrad = domrad*grp
 
 	if np.sum(domrad) == 0:
-		print('Zero DOMs within track radius')
+#		print('Zero DOMs within track radius')
 		return False
 
-	print('Accepted')
+#	print('Accepted')
 	domstr = np.array(domfile[domrad,3]).astype(float)
 	group = np.array(domfile[domrad,4]).astype(float)
+	ice_group = np.array(domfile[domrad,8]).astype(float)
+	RDE = np.array(domfile[domrad,9]).astype(float)
 	charge = charge[domrad].astype(float)
+#	charge = charge/RDE
 	x = x[domrad].astype(float)
 	y = y[domrad].astype(float)
 	z = z[domrad].astype(float)	
@@ -113,6 +116,7 @@ def test(frame):
 #	frame['pulse_width'] = dataclasses.I3VectorDouble(pulse_width)
 	frame['domstr'] = dataclasses.I3VectorDouble(domstr)
 	frame['group'] = dataclasses.I3VectorDouble(group)
+	frame['icegroup'] = dataclasses.I3VectorDouble(ice_group)
 	frame['HQE'] = dataclasses.I3VectorDouble(HQE)
 #	frame['domrad'] = dataclasses.I3VectorDouble(domrad)
 #	frame['eventid'] = dataclasses.I3VectorDouble(eventid)
@@ -145,22 +149,32 @@ border = mpath.Path(bordercoords)
 border_zminmax = [-512.82,524.56]
 trackradius = 100
 height = 100
+domrad_min = 0
+domrad_max = 130
+theta_min = 0
+theta_max = 180
 
-domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_coords_spacing_HQE.txt',dtype='str')
-testfilename = '/data/sim/IceCube/2012/filtered/level2/CORSIKA-in-ice/11499/77000-77999/Level2_IC86.2012_corsika.011499.077910.i3.bz2'
+#domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_coords_spacing_HQE.txt',dtype='str')
+domfile = np.loadtxt('/home/sstray/test/condor/corsikafiles/dom_spacing_2.txt',dtype='str')
 outputname = 'featurelist.hdf5'
-meanstd = np.loadtxt('/home/sstray/test/condor/corsikafiles/meanstd.txt')
-domradius = 100
+
+strings_to_cut = [1,2,3,4,5,6,13,21,30,40,50,59,67,74,73,72,78,77,76,75,68,60,51,41,31,22,14,7]
+dom_strings = np.array([i[:2] for i in domfile[:,3]]).astype(int)
+good_doms = np.array(domfile[:,2]!='BAD')
+not_outer = ~np.isin(dom_strings,strings_to_cut)
+grp = not_outer * good_doms
+
 th1 = 0.9
 th2 = 0.99
-#from icecube.sim_services import propagation
+from icecube.sim_services import propagation
 def test_my_little_function():
-	my_features = ['x','y','z','charge','domstr','group','HQE']
+	my_features = ['x','y','z','charge','domstr','group','HQE','icegroup']
 	
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-i','--infiles',required=True)
 	args = parser.parse_args()
 	filelist = args.infiles.split(',')
+	first_file_bad = 1
 	for nums in range(len(filelist)):
 #		if nums == (len(filelist)-1):
 #			filelist[nums] = filelist[nums][:-1]
@@ -170,15 +184,19 @@ def test_my_little_function():
 
 		tray = I3Tray()
 		tray.AddModule('I3Reader','read_stuff',Filename=filelist[nums])
+#		tray.AddModule('Delete',keys=["MMCTrackList"])
 #		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
 		tray.AddModule(test,'test')
 		tray.AddModule(savefeatures,'asd',fin=featurestemp,names=my_features)
 		tray.Execute()
 		for i in range(len(featurestemp)):
 			 featurestemp[i] = [item for sublist in featurestemp[i] for item in sublist]
-		if nums == 0:
+		if (nums == 0) or (first_file_bad == 1):
+			print('Grouping')
 			featuresarray = np.column_stack(featurestemp)
+			first_file_bad = 0
 		else:
+			print('Grouping and concatenating')
 			featuresarray = np.concatenate((featuresarray,np.column_stack(featurestemp)),axis=0)
 		print(featuresarray.shape)
 	return featuresarray
