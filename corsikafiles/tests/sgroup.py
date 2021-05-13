@@ -1,5 +1,9 @@
 from icecube import icetray, dataclasses
-
+def CheckFile(frame):
+        try:
+                series = dataclasses.I3RecoPulseSeriesMap.from_frame(frame, "InIcePulses")
+        except:
+                return False
 def test(frame):
 
 	if frame['I3EventHeader'].sub_event_stream != 'InIceSplit':
@@ -287,6 +291,7 @@ def test_my_little_function():
                 #print("I3Tray")
 		tray.AddModule("I3Reader","read_stuff",Filenamelist=[gcd_file,filelist[nums]])
                 #print("I3Reader")
+                tray.AddModule(CheckFile,"check_file")
 		tray.AddModule("Delete",keys=["MMCTrackList"])
                 #print("Delete MMCTrackList")
 		tray.AddSegment(propagation.RecreateMCTree,"recreate",RawMCTree="I3MCTree_preMuonProp",RNGState="I3MCTree_preMuonProp_RNGState",Paranoia=False)
