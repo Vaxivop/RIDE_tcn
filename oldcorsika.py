@@ -3,7 +3,6 @@ from icecube import icetray, dataclasses
 from icecube import dataio
 from I3Tray import *
 import numpy as np
-import tables
 import argparse
 
 parser = argparse.ArgumentParser(description='script for reconstructing data and apply cuts on L2 sim files')
